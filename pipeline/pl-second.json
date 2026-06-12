@@ -1,0 +1,28 @@
+{
+	"name": "pl-second",
+	"properties": {
+		"activities": [
+			{
+				"name": "pipeline-wait-2",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": {
+						"value": "@pipeline().parameters.pipeline",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"pipeline": {
+				"type": "int",
+				"defaultValue": 5
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2026-05-28T15:47:34Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

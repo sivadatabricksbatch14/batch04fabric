@@ -1,0 +1,15 @@
+{
+	"name": "praveen01adf243",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "southindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "25027bf9-6bd3-4b7b-b71d-38863f7b2385",
+		"tenantId": "e44bcb9b-77d9-43f1-bfe5-8fcfe106423d"
+	}
+}

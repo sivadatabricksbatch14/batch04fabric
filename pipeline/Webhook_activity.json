@@ -1,0 +1,39 @@
+{
+	"name": "Webhook_activity",
+	"properties": {
+		"activities": [
+			{
+				"name": "WebHook1",
+				"type": "WebHook",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://management.azure.com/subscriptions/f48f3e0f-d3e7-45e0-9e55-cb2ba899a928/resourceGroups/praveen01rsg/providers/Microsoft.DataFactory/factories/batch04fabadf/pipelines/pipeline11/createRun?api-version=2018-06-01",
+					"method": "POST",
+					"body": {
+						"Param1": "Value1"
+					},
+					"timeout": "00:10:00",
+					"reportStatusOnCallBack": true,
+					"authentication": {
+						"type": "ServicePrincipal",
+						"password": {
+							"type": "SecureString",
+							"value": "**********"
+						},
+						"userTenant": "e44bcb9b-77d9-43f1-bfe5-8fcfe106423d",
+						"username": "30ce3919-b591-4c41-b908-e9638810a959",
+						"resource": "https://management.azure.com"
+					}
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-06-10T02:07:32Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

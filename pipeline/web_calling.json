@@ -1,0 +1,150 @@
+{
+	"name": "web_calling",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://management.azure.com/subscriptions/f48f3e0f-d3e7-45e0-9e55-cb2ba899a928/resourceGroups/praveen01rsg/providers/Microsoft.DataFactory/factories/batch04fabadf/pipelines/Run_using_rest_call/createRun?api-version=2018-06-01",
+					"authentication": {
+						"type": "ServicePrincipal",
+						"userTenant": "e44bcb9b-77d9-43f1-bfe5-8fcfe106423d",
+						"username": "84370741-10df-4ba4-a3b0-80c1b531e9fc",
+						"resource": "https://management.azure.com",
+						"password": {
+							"type": "SecureString",
+							"value": "**********"
+						}
+					}
+				}
+			},
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [
+					{
+						"activity": "Web1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@or(\n    equals(activity('Web2').output.status,'Succeeded'),\n    or(\n        equals(activity('Web2').output.status,'Failed'),\n        equals(activity('Web2').output.status,'Cancelled')\n    )\n)",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Wait1",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 5
+							}
+						},
+						{
+							"name": "Web2",
+							"type": "WebActivity",
+							"dependsOn": [
+								{
+									"activity": "Wait1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"url": {
+									"value": "@concat('https://management.azure.com/subscriptions/f48f3e0f-d3e7-45e0-9e55-cb2ba899a928/resourceGroups/praveen01rsg/providers/Microsoft.DataFactory/factories/batch04fabadf/pipelineruns/',activity('Web1').output.runId,'?api-version=2018-06-01')",
+									"type": "Expression"
+								},
+								"authentication": {
+									"type": "ServicePrincipal",
+									"userTenant": "e44bcb9b-77d9-43f1-bfe5-8fcfe106423d",
+									"username": "84370741-10df-4ba4-a3b0-80c1b531e9fc",
+									"resource": "https://management.azure.com",
+									"password": {
+										"type": "SecureString",
+										"value": "**********"
+									}
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			},
+			{
+				"name": "IfCondition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "Until1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('Web2').output.status,'Succeeded')",
+						"type": "Expression"
+					},
+					"ifFalseActivities": [
+						{
+							"name": "FailActivity",
+							"type": "Fail",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"message": {
+									"value": "@concat('Child pipeline ended with status: ',activity('Web2').output.status)",
+									"type": "Expression"
+								},
+								"errorCode": "ChildPipelineFailed"
+							}
+						}
+					],
+					"ifTrueActivities": [
+						{
+							"name": "SuccessWait",
+							"type": "Wait",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"waitTimeInSeconds": 1
+							}
+						}
+					]
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-06-10T03:15:27Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
